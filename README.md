@@ -504,5 +504,5 @@ Sample Data
 
 ## Contributors
 
-[Simon Ugorji](https://twitter.com/ugorji_simon)
-[Kiisi Felix](https://github.com/kiisi)
+- [Kiisi Felix](https://github.com/kiisi)
+- [Melody Oluoma](https://github.com/oma189)
