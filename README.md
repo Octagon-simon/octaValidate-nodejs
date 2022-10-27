@@ -1,6 +1,6 @@
 # Octavalidate - NodeJS V1.0.0
 
-This NPM package helps to validate your forms server-side using validation rules and sophisticated regular expressions.
+This NPM package helps to validate your forms server-side using validation rules and sophisticated regular expressions in NodeJS.
 
 ## OTHER RELEASES
 
@@ -10,7 +10,7 @@ Use the PHP release of this library to validate your forms server-side.
 [Visit the repository](https://github.com/Octagon-simon/octaValidate-PHP)
 
 ### Octavalidate - JS
-Use the JS release of this library to validate your frontend (HTML) forms. 
+Use the Native JS release of this library to validate your frontend (HTML) forms. 
 
 [Visit the repository](https://github.com/Octagon-simon/octaValidate)
 
@@ -29,6 +29,7 @@ $ npm install octavalidate-nodejs
 ## How to Use
 
 ### Middleware Approach
+
 To use this package as a middleware, follow the process below
 
 - Create a new file within your middleware folder or modify an already existing middleware.
@@ -43,14 +44,13 @@ const config = {
     strictMode : true,
     strictWords : ["admin", "fake", "empty", "null"]
 }
-//syntax
-//const validate = new octaValidate('my_form_id', CONFIG_OPTIONS)
+
 //create new instance
 const validate = new octaValidate('my_form_id', config)
 ```
 - Then define validation rules for that particular form. 
 
-> If the form has a file upload field, you have to define separate rules for that field.
+> If the form has a file upload field, then you have to define separate rules for that field.
 
 Here's the syntax to define validation rules
 
@@ -439,10 +439,6 @@ const myForm = new octaValidate('FORM_ID');
 - `moreCustomRules(RULES)`
   
     Invoke this method to define more custom validation rules.
-- `getCredits()`
-  
-  Invoke this method to retrieve the LinkedIn Profile URLs and Github URLs of the people that contributed to the development of this Great library.
-  
 - `version()`
   
   Invoke this method to retrieve the library's version number.
@@ -509,3 +505,4 @@ Sample Data
 ## Contributors
 
 [Simon Ugorji](https://twitter.com/ugorji_simon)
+[Kiisi Felix](https://github.com/kiisi)

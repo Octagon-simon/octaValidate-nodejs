@@ -706,18 +706,4 @@ class octaValidate {
         return this.#errors;
     }
 }
-/*
-//for express-fileupload
-{"cover": 
-    {   "name":"1.png",
-        "data":{"type":"Buffer","data":0},
-        "size":32564,
-        "encoding":"7bit",
-        "tempFilePath":"",
-        "truncated":false,
-        "mimetype":"image/png",
-        "md5":"341331472785bec82e6dafc4ee91328b"
-    }
-}
-*/
 module.exports = octaValidate
