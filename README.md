@@ -504,5 +504,7 @@ Sample Data
 
 ## Contributors
 
+These are the amazing developers that contributed to the development of this **GREAT** project
+
 - [Kiisi Felix](https://github.com/kiisi)
 - [Melody Oluoma](https://github.com/oma189)
