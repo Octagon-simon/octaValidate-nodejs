@@ -1,6 +1,6 @@
-# Octavalidate - NodeJS V1.0.0
+# Octavalidate - NodeJS V1.0.1
 
-This NPM package helps to validate your forms server-side using validation rules and sophisticated regular expressions in NodeJS.
+This NPM package helps to validate your NodeJS form fields server-side using validation rules and sophisticated regular expressions.
 
 ## OTHER RELEASES
 

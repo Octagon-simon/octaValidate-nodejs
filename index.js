@@ -1,6 +1,6 @@
 class octaValidate {
     #author = "Simon Ugorji";
-    #version = "1.0.0";
+    #version = "1.0.1";
     #strictWords = ["null", "undefined", "empty"];
     #strictMode = false;
     #formId = ""
@@ -233,6 +233,8 @@ class octaValidate {
     * @param fields The form fields to validate.
     */
     validateFields(valRules = {}, fields = {}) {
+        //reset error object -> patch for v1.0.1
+        this.#errors = {}
 
         //check if fields is empty
         if (!this.#isObject(fields))
@@ -471,6 +473,9 @@ class octaValidate {
     * @param files The files to validate. Default is `req.files`
     */
     validateFiles(valRules = {}, files  =  req.files) {
+        //reset error object -> patch for v1.0.1
+        this.#errors = {}
+
         //reassign files
         files = Object.assign({}, files)
         //if files is null, st it to an empty object
