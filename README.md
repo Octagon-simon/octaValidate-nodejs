@@ -1,18 +1,23 @@
-# Octavalidate - NodeJS V1.0.1
+# Octavalidate - NodeJS V1.0.3
 
 This NPM package helps to validate your NodeJS form fields server-side using validation rules and sophisticated regular expressions.
 
 ## OTHER RELEASES
+
+### Octavalidate - Native JS
+Use the Native JS release of this library to validate your frontend forms client-side
+
+[Visit the repository](https://github.com/Octagon-simon/octaValidate)
 
 ### Octavalidate - PHP
 Use the PHP release of this library to validate your forms server-side.
 
 [Visit the repository](https://github.com/Octagon-simon/octaValidate-PHP)
 
-### Octavalidate - JS
-Use the Native JS release of this library to validate your frontend (HTML) forms. 
+### Octavalidate - ReactJS
+Use the ReactJS release of this library to validate your front-end forms client-side.
 
-[Visit the repository](https://github.com/Octagon-simon/octaValidate)
+[Visit the package](https://npmjs.com/package/octavalidate-reactjs)
 
 ## DOCUMENTATION
 
@@ -178,7 +183,7 @@ const fieldRules = {
 
 app.post('auth/register', (req, res) => {
     try{
-        if ( validate.validateFiles(fieldRules, req.body) ) {
+        if ( validate.validateFields(fieldRules, req.body) ) {
             //process form data here
             return res.status(200).json({
                 message: "Form validation successful"

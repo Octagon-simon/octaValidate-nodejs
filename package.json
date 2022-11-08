@@ -1,6 +1,6 @@
 {
   "name": "octavalidate-nodejs",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "This NPM package helps to validate your NodeJS form fields server-side using validation rules and sophisticated regular expressions",
   "main": "index.js",
   "scripts": {

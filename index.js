@@ -1,6 +1,6 @@
 class octaValidate {
     #author = "Simon Ugorji";
-    #version = "1.0.1";
+    #version = "1.0.3";
     #strictWords = ["null", "undefined", "empty"];
     #strictMode = false;
     #formId = ""
@@ -230,11 +230,19 @@ class octaValidate {
     /** 
     * Use this method to validate form fields
     * @param valRules Required. This is your validation rules
-    * @param fields The form fields to validate.
+    * @param fields Required. The form fields to validate.
     */
     validateFields(valRules = {}, fields = {}) {
-        //reset error object -> patch for v1.0.1
-        this.#errors = {}
+        //check if form id is present in error object
+        if(Object.keys(this.#errors).length){
+            //check if validation errors are present in error object[form_id]
+            if(!Object.keys(this.#errors[this.#formId]).length){
+                this.#errors = {}
+            }
+        }else{
+            //reset error object
+            this.#errors = {}
+        }
 
         //check if fields is empty
         if (!this.#isObject(fields))
@@ -277,7 +285,6 @@ class octaValidate {
                         this.#addError(fieldName, `Please remove or replace '${ProhibitedWords}'`)
                         break;
                     }
-
                 }
                 //check if rule is R
                 if (rule == 'R') {
@@ -286,6 +293,8 @@ class octaValidate {
                     if (typeof fieldValue === "undefined" || fieldValue.trim() === "") {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 }
                 //handle custom rules
@@ -300,6 +309,8 @@ class octaValidate {
                         if (!regExp.test(fieldValue)) {
                             this.#addError(fieldName, errorMsg)
                             break;
+                        }else{
+                            this.#removeError(fieldName)
                         }
                     }
                 } else if (rule == 'EMAIL') {
@@ -308,6 +319,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateEmail(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'USERNAME') {
                     const errorMsg = valRules[fieldName]['USERNAME']
@@ -315,6 +328,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateUserName(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'ALPHA_ONLY') {
                     const errorMsg = valRules[fieldName]['ALPHA_ONLY']
@@ -322,6 +337,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateAlpha_Only(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'ALPHA_SPACES') {
                     const errorMsg = valRules[fieldName]['ALPHA_SPACES']
@@ -329,6 +346,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateAlpha_Spaces(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'ALPHA_NUMERIC') {
                     const errorMsg = valRules[fieldName]['ALPHA_NUMERIC']
@@ -336,6 +355,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateAlpha_Numeric(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'LOWER_ALPHA') {
                     const errorMsg = valRules[fieldName]['LOWER_ALPHA']
@@ -343,6 +364,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateLower_Alpha(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'UPPER_ALPHA') {
                     const errorMsg = valRules[fieldName]['UPPER_ALPHA']
@@ -350,6 +373,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateUpper_Alpha(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'PWD') {
                     const errorMsg = valRules[fieldName]['PWD']
@@ -357,6 +382,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidatePWD(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'DIGITS') {
                     const errorMsg = valRules[fieldName]['DIGITS']
@@ -364,6 +391,8 @@ class octaValidate {
                     if (fieldValue && isNaN(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'URL') {
                     const errorMsg = valRules[fieldName]['URL']
@@ -371,6 +400,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateUrl(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'URL_QP') {
                     const errorMsg = valRules[fieldName]['URL_QP']
@@ -378,6 +409,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateUrl_QP(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'DATE_MDY') {
                     const errorMsg = valRules[fieldName]['DATE_MDY']
@@ -385,6 +418,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateDate_MDY(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'TEXT') {
                     const errorMsg = valRules[fieldName]['TEXT']
@@ -392,6 +427,8 @@ class octaValidate {
                     if (fieldValue && !this.#validationLibrary().ValidateTEXT(fieldValue)) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 }
                 //it's time for attributes now
@@ -408,6 +445,8 @@ class octaValidate {
                     if (fieldValue && fieldValue.length !== toCompare) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'MINLENGTH') {
                     //check if rule's value is an array, and has 2 items
@@ -421,6 +460,8 @@ class octaValidate {
                     if (fieldValue && fieldValue.length < toCompare) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'MAXLENGTH') {
                     //check if rule's value is an array, and has 2 items
@@ -434,6 +475,8 @@ class octaValidate {
                     if (fieldValue && fieldValue.length > toCompare) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'EQUALTO') {
                     //check if rule's value is an array, and has 2 items
@@ -454,6 +497,8 @@ class octaValidate {
                     if (fieldValue && reqBody[toCompare] !== fieldValue) {
                         this.#addError(`${fieldName}:${toCompare}`, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 }
             }
@@ -470,11 +515,19 @@ class octaValidate {
 
     /** Use this method to validate uploaded files
     * @param valRules Required. This is your validation rules
-    * @param files The files to validate. Default is `req.files`
+    * @param files Required. The files to validate.
     */
-    validateFiles(valRules = {}, files  =  req.files) {
-        //reset error object -> patch for v1.0.1
-        this.#errors = {}
+    validateFiles(valRules = {}, files = {}) {
+        //check if form id is present in error object
+        if(Object.keys(this.#errors).length){
+            //check if validation errors are present in error object[form_id]
+            if(!Object.keys(this.#errors[this.#formId]).length){
+                this.#errors = {}
+            }
+        }else{
+            //reset error object
+            this.#errors = {}
+        }
 
         //reassign files
         files = Object.assign({}, files)
@@ -482,15 +535,6 @@ class octaValidate {
         //by default req.files is null even when you submit a form without attaching a file
         if (!files)
             files = {}
-
-            /*
-            Not necessary since I am going to use Required to check for it anyways.
-        //check if all defined fields in validation rules, exists in fieldslist
-        for (let fieldName in valRules) {
-            //check if field name exists in reqBody
-            if (typeof reqBody[fieldName] === "undefined")
-                this.#addError(fieldName, `The Fieldname '${fieldName}' cannot be found`)
-        }*/
 
         //check if rules object is empty
         if (!this.#isObject(valRules) || !Object.keys(valRules).length)
@@ -513,6 +557,8 @@ class octaValidate {
                     if (!filesLength || typeof files[fieldName] === "undefined") {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 }
                 //no need for custom rules here you get?
@@ -529,6 +575,8 @@ class octaValidate {
                     if (filesLength !== toCompare) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'MINFILES') {
                     //check if rule's value is an array, and has 2 items
@@ -543,6 +591,8 @@ class octaValidate {
                     if (filesLength < toCompare) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 } else if (rule == 'MAXFILES') {
                     //check if rule's value is an array, and has 2 items
@@ -557,6 +607,8 @@ class octaValidate {
                     if (filesLength > toCompare) {
                         this.#addError(fieldName, errorMsg)
                         break;
+                    }else{
+                        this.#removeError(fieldName)
                     }
                 }
                 //SIZE validation
@@ -575,6 +627,8 @@ class octaValidate {
                         if (Number(files[fieldName]['size']) !== toCompare) {
                             this.#addError(fieldName, errorMsg)
                             break;
+                        }else{
+                            this.#removeError(fieldName)
                         }
                     } else if (filesLength > 1) {
                         //multiple files [{"name" : "me.png"}, {"name" : "you.png"}]
@@ -585,6 +639,8 @@ class octaValidate {
                             if (Number(file['size']) !== toCompare) {
                                 this.#addError(fieldName, errorMsg)
                                 break;
+                            }else{
+                                this.#removeError(fieldName)
                             }
                             ind++;
                         }
@@ -603,6 +659,8 @@ class octaValidate {
                         if (Number(files[fieldName]['size']) < toCompare) {
                             this.#addError(fieldName, errorMsg)
                             break;
+                        }else{
+                            this.#removeError(fieldName)
                         }
                     } else if (filesLength > 1) {
                         //multiple files [{"name" : "me.png"}, {"name" : "you.png"}]
@@ -613,6 +671,8 @@ class octaValidate {
                             if (Number(file['size']) < toCompare) {
                                 this.#addError(fieldName, errorMsg)
                                 break;
+                            }else{
+                                this.#removeError(fieldName)
                             }
                             ind++;
                         }
@@ -631,6 +691,8 @@ class octaValidate {
                         if (Number(files[fieldName]['size']) > toCompare) {
                             this.#addError(fieldName, errorMsg)
                             break;
+                        }else{
+                            this.#removeError(fieldName)
                         }
                     } else if (filesLength > 1) {
                         //multiple files [{"name" : "me.png"}, {"name" : "you.png"}]
@@ -641,6 +703,8 @@ class octaValidate {
                             if (Number(file['size']) > toCompare) {
                                 this.#addError(fieldName, errorMsg)
                                 break;
+                            }else{
+                                this.#removeError(fieldName)
                             }
                             ind++;
                         }
@@ -663,6 +727,8 @@ class octaValidate {
                         if (!(requiredFileMime.includes(files[fieldName]['mimetype'])) && !(requiredFileMime.includes(files[fieldName]['mimetype'].split(files[fieldName]['mimetype'].substr(files[fieldName]['mimetype'].indexOf('/')))[0] + "/*"))) {
                             this.#addError(fieldName, errorMsg)
                             break;
+                        }else{
+                            this.#removeError(fieldName)
                         }
                     } else if (filesLength > 1) {
                         //multiple files [{"name" : "me.png"}, {"name" : "you.png"}]
@@ -674,6 +740,8 @@ class octaValidate {
                             if (!(requiredFileMime.includes(file['mimetype'])) && !(requiredFileMime.includes(file['mimetype'].split(file['mimetype'].substr(file['mimetype'].indexOf('/')))[0] + "/*"))) {
                                 this.#addError(fieldName, errorMsg)
                                 break;
+                            }else{
+                                this.#removeError(fieldName)
                             }
                             ind++;
                         }
@@ -708,6 +776,14 @@ class octaValidate {
 
     //get errors
     getErrors() {
+        if(Object.keys(this.#errors).length){
+            //check if validation errors are present in error object[form_id]
+            if(!Object.keys(this.#errors[this.#formId]).length){
+                this.#errors = {}
+            }
+        }else{
+            this.#errors = {}
+        }
         return this.#errors;
     }
 }
