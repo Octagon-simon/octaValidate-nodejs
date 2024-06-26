@@ -1,10 +1,10 @@
 {
   "name": "octavalidate-nodejs",
-  "version": "1.0.3",
-  "description": "This NPM package helps to validate your NodeJS form fields server-side using validation rules and sophisticated regular expressions",
+  "version": "2.0.0",
+  "description": "This is a developer-friendly package that helps to validate a JSON payload using validation rules and sophisticated regular expressions. You can use this package to validate a form submission via any HTTP method.",
   "main": "index.js",
   "scripts": {
-    "test": "node demo/demo.js"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/Octagon-simon/octavalidate-nodejs/issues"
   },
-  "homepage": "https://github.com/Octagon-simon/octavalidate-nodejs#readme"
+  "homepage": "https://github.com/Octagon-simon/octavalidate-nodejs#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }

@@ -1,515 +1,417 @@
-# Octavalidate - NodeJS V1.0.3
+# Octavalidate-NodeJS
 
-This NPM package helps to validate your NodeJS form fields server-side using validation rules and sophisticated regular expressions.
+This is a developer-friendly package that helps to validate a JSON payload using validation rules and sophisticated regular expressions. You can use this package to validate a form submission via any HTTP method.
 
-## OTHER RELEASES
-
-### Octavalidate - Native JS
-Use the Native JS release of this library to validate your frontend forms client-side
-
-[Visit the repository](https://github.com/Octagon-simon/octaValidate)
-
-### Octavalidate - PHP
-Use the PHP release of this library to validate your forms server-side.
-
-[Visit the repository](https://github.com/Octagon-simon/octaValidate-PHP)
-
-### Octavalidate - ReactJS
-Use the ReactJS release of this library to validate your front-end forms client-side.
-
-[Visit the package](https://npmjs.com/package/octavalidate-reactjs)
-
-## DOCUMENTATION
-
-Visit the [DOCUMENTATION](https://octagon-simon.github.io/projects/octavalidate/nodejs/) to learn more about this GREAT Library!
-
-## INSTALL
-
-### NPM
+## 🧪 INSTALLATION
 
 ```shell
 $ npm install octavalidate-nodejs
 ```
 
-## How to Use
+## ✅ HOW TO USE
 
-### Middleware Approach
+The following code below shows how you can use this package to validate your form.
 
-To use this package as a middleware, follow the process below
+You can validate both files and non-file objects
 
-- Create a new file within your middleware folder or modify an already existing middleware.
-- Import the library.
-- Create a new instance of `octaValidate` and pass in the `form id` as the first argument then any configuration option as the second argument.
+> ⚠️ This library only supports validation on `JSON` payloads
 
-```javascript
-//import library
-const octaValidate = require('octavalidate-nodejs')
-
-const config = {
-    strictMode : true,
-    strictWords : ["admin", "fake", "empty", "null"]
-}
-
-//create new instance
-const validate = new octaValidate('my_form_id', config)
-```
-- Then define validation rules for that particular form. 
-
-> If the form has a file upload field, then you have to define separate rules for that field.
-
-Here's the syntax to define validation rules
-
-```javascript
-//syntax
-const fieldRules = {
-  FIELD_NAME : {
-    RULE_TITLE : ERROR_MESSAGE
-  }
-}
-```
-Here's an example
-
-```javascript
-//define valiation rules for field names
-const fieldRules = {
-    email : {
-        'R' : "Your Email Address is required",
-        'EMAIL' : "This Email Address is invalid"
-    },
-    username : {
-        'R' : "Your username is required",
-        'USERNAME' : "Your username contains invalid characters"
-    }
-}
-```
-- Begin validation on the form fields by invoking the method `validateFields()`
-
-The method `validateFields()` takes in 2 arguments. 
-- The first argument is the validation rules on the form
-- The second argument is the form fields which may be located inside `req.body`, `req.query`, or `req.params`
-
-```javascript
-module.exports = (req, res, next) => {
-    //req.body contains the form fields
-    //check if validation is successful
-    if ( validate.validateFields(fieldRules, req.body) ) {
-        //process form data here
-        return res.status(200).json({
-            message: "Form validation successful"
-        })
-    }else{
-        //validation error, now return the errors
-        return res.status(406).json({
-            message: "Form validation failed", 
-            validationErrors: validate.getErrors()
-        })
-    }
-    //move on to the next middleware
-    next()
-}
-```
-That's it! It is that simple.
-
-### VALIDATING AN UPLOADED FILE
-
-Now, what if you want to validate an uploaded file, how would you achieve that?
-
-To validate an uploaded file, invoke the `validateFiles()` method.
-
-This method accepts 2 arguments;
-
-- The first argument is the validation rules on the file upload
-- The second argument is the file upload fields which is located in `req.files`
-
-```javascript
-//validation rules for file upload
-const fileRules = {
-  profile : {
-    'R' : "Please upload a profile picture",
-    'ACCEPT' : ["image/png", "File type is not supported"],
-    'MAXSIZE' : ["5MB", "Your profile image should not be greater than 5MB"]
-  }
-}
-module.exports = (req, res, next) => {
-    //req.files contains the uploaded files using multer
-    //check if file validation is successful
-    if ( validate.validateFiles(fieldRules, req.files) ) {
-        //process form data here
-        return res.status(200).json({
-            message: "Form validation successful"
-        })
-    }else{
-        //validation error, now return the errors
-        return res.status(406).json({
-            message: "Form validation failed", 
-            validationErrors: validate.getErrors()
-        })
-    }
-    //move on to the next middleware
-    next()
-}
-```
-
-### Other Approach
-
-In your `server file`, you can also validate your form fields by following the process below;
-
-- Import the library
-- Define validation rules for form fields
-- Invoke the `validateFields()` method to begin validation
+### OVERVIEW
 
 ```javascript
 //import library
-const octaValidate = require('octavalidate-nodejs')
+const Octavalidate = require("octavalidate-nodejs");
 
-const config = {
-    strictMode : true,
-    strictWords : ["admin", "fake", "empty", "null"]
-}
-//create new instance
-const validate = new octaValidate('my_form_id', config)
+//create new validation instance
+const octavalidate = new Octavalidate("ROUTE_IDENTIFIER");
 
-//define valiation rules for field names
-const fieldRules = {
-    email : {
-        'R' : "Your Email Address is required",
-        'EMAIL' : "This Email is invalid"
-    },
-    username : {
-        'R' : "Your username is required",
-        'USERNAME' : "Your username contains invalid characters"
-    }
-}
+//get validation methods
+const { createValidator, validate, getError, getErrors } = octavalidate;
 
-app.post('auth/register', (req, res) => {
-    try{
-        if ( validate.validateFields(fieldRules, req.body) ) {
-            //process form data here
-            return res.status(200).json({
-                message: "Form validation successful"
-            })
-        }else{
-            //validation error, now return the errors
-            return res.status(406).json({
-                message: "Form validation failed", 
-                validationErrors: validate.getErrors()
-            })
-        }
-    }catch(e){
-      console.log(e)
-    }
-})
-
-```
-The return type of `validateFields()` and `validateFiles()` is `Boolean`.
-
-- `true` means that there are no validation errors
-
-- `false` means that there are validation errors
-   
-Now if you want to return validation errors, invoke the `getErrors()` method.
-
-## VALIDATION RULES
-
-Here is the list of default validation rules.
-
-- R - A value is required.
-- ALPHA_ONLY - The value must be letters only! (lower-case or upper-case).
-- LOWER_ALPHA - The value must be lower-case letters only.
-- UPPER_ALPHA - The value must be upper-case letters only.
-- ALPHA_SPACES - The value must contain letters or Spaces only!
-- ALPHA_NUMERIC - The value must contain letters and numbers.
-- DATE_MDY - The value must be a valid date with the format mm/dd/yyyy.
-- DIGITS - The value must be valid digits or numbers. 
-- PWD - The value must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters. 
-- EMAIL - The value must be a valid Email Address.
-- URL - The value must be a valid URL
-- URL_QP - The value must be a valid URL and may contain Query parameters.
-- USERNAME - The value may contain letters, numbers, a hyphen or an underscore.
-- TEXT - The value may contain any of these special characters (. , / () [] & ! '' "" : ; ?)
-
-Can't see a validation rule that you need for your form? Don't worry!
-
-With this library, you have the power to define a custom rule and it will be processed as if it were a default rule.
-  
-## CUSTOM VALIDATION RULES
-
-In some cases where you need a custom rule, use the method below to define one for your form.
-
-```javascript
-//syntax for custom rule
-validationInstance.customRule(RULE_TITLE, REG_EXP, ERROR_TEXT);
-```
-Here's a custom rule to validate an email address.
-
-```javascript
-//custom email validation
-const rule_title = "EML";
-const reg_exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-//create new instance of the function
-const myForm = new octaValidate('form_register');
-//define the custom rule
-myForm.customRule(rule_title, reg_exp);
-```
-
-Then when defining validation rules, provide the rule title ` EML `.
-
-```javascript
-const fieldRules = {
-  email : {
-    'EML' : "Please povide a valid Email Address"
-  }
-}
-```
-> Note: All Rule Titles are **case-sensitive!**
-
-## MORE CUSTOM RULES
-
-What if you want to define more validation rules?
-
-All you need to do is to create an object with your validation rule and regular expression then invoke the `moreCustomRules()` method.
-
-```javascript
-//EMAIL AND URL VALIDATION RULES
-const rules = {
-    "EML": /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-    "URI": /^((?:http:\/\/)|(?:https:\/\/))(www.)?((?:[a-zA-Z0-9]+\.[a-z]{3})|(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1(?::\d+)?))([\/a-zA-Z0-9\.]*)$/i
+//define validation rules
+const validationRules = {
+  username: {
+    required: true,
+    type: "string",
+    ruleTitle: "userName",
+  },
 };
 
-//create new instance of the function
-const myForm = new octaValidate('form_register');
-//define multiple custom rules
-myForm.moreCustomRules(rules);
+//create validation rules
+createValidator(validationRules);
+
+//validate your JSON payload
+//true means validation passed
+//false means validation failed
+const validationResponse = validate(req.body);
+
+//return single error
+console.log(getError());
+//return all errors
+console.log(getErrors());
 ```
-> Note: You do not need to pass in your **regular expression** as a string! This is because the *JavaScript engine* natively recognizes *regular expressions*.
 
-## ATTRIBUTES VALIDATION
+Here's a step-by-step process on how you can validate your form with Octavalidate.
 
-This type of validation allowes you to provide a value for the rule title. For example, If I want the user to enter just 5 characters, I will use the rule title `LENGTH` and provide `5` as its value 
-
-Currently we have 3 categories of attributes validation:
-
-- length validation
-- EqualTo validation
-- File validation
-  
-Validation rules under this category follows the syntax below
+### Import and Initialize The Library
 
 ```javascript
-//syntax
-const fieldRules = {
-  FIELD_NAME : {
-    RULE_TITLE : [VALUE, ERROR_MESSAGE]
-  }
-}
+//import library
+const Octavalidate = require("octavalidate-nodejs");
+
+//create new validation instance
+const octavalidate = new Octavalidate("ROUTE_IDENTIFIER");
 ```
 
-### LENGTH VALIDATION
+### Add Configuration Options
 
-With the `LENGTH` validation, you can validate;  `maxlength, minlength and length` of a form field 
-
-- maxlength (5) - This means that the value of the form field must be 5 characters or less.
-- minlength (5) - This means that the value of the form field must be up to 5 characters or more.
-- length (5) - This means that the value of the form field must be equal to 5 characters.
-
-```javascript
-//validate input lengths
-const fieldRules = {
-  password : {
-    'MINLENGTH' : [8, "Your password must be 8 characters or more"]
-  },
-  age : {
-    'DIGITS' : "Your age must be valid digits",
-    'LENGTH' : [2, "Your age must be 2 digits"]
-  },
-  username : {
-    'MAXLENGTH' : [5, "Your username must be 5 characters or more"]
-  }
-}
-
-```
-
-### EQUALTO VALIDATION
-
-You can check if two form fields contain the same values, using the attribute `equalto`
-
-Here's the syntax
-
-```javascript
-//syntax
-const fieldRules = {
-  FIELD_NAME : {
-    EQUALTO : [THE_OTHER_FIELD_NAME, ERROR_MESSAGE]
-  }
-}
-```
-Here's an example
-
-```javascript
-//equalto validation
-const fieldRules = {
-  password : {
-    'R' : "Your password is required",
-    'EQUALTO' : ['confirmPassword', 'Both passwords do not match']
-  }
-  confirmPassword : {
-    'R' : "Please re-enter your password"
-  }
-}
-```
-### FILE VALIDATION
-
-Use the RULTE TITLE below to validate a file upload field
-
-- accept-mime - This Rule Title allows you to list out the file MIME types allowed for upload. It supports a wildcard eg audio/\*, image/png
-- size (2MB) - This means that the file uploaded must be 2MB in size
-- minsize (5MB) - This means that the file uploaded must be up to 5MB or more.
-- maxsize (5MB) - This means that the file uploaded must be 5MB or less.
-  
-Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/nodejs/file.html) to learn more about file validation.
-
-## API METHODS
-
-### validateFields
-
-Invoke the `validateFields()` method to begin validation on the form fields.
-
-```javascript
-//Your validation instance
-const myForm = new octaValidate('form_register');
-//begin validation
-myForm.validateFields(RULES, FORM_FIELDS);
-```
-### validateFiles
-
-Invoke the `validateFiles()` method to begin valiation on uploaded files.
-
-```javascript
-//Your validation instance
-const myForm = new octaValidate('form_register');
-//begin validation
-myForm.validateFiles(RULES, FILE_FIELDS);
-```
-
-There are more methods in the [documentation](https://octagon-simon.github.io/projects/octavalidate/nodejs).
-
-## CONFIGURATION
-
-We have 3 configuration options:
+We have 2 configuration options:
 
 - strictMode: <code>Boolean</code>
-  
-  This option removes extra white space from the start and at the end of a form input and also prevents the user from providing reserved keywords as values. Default value is `false`.
-- strictWords: <code>Array</code>
-  
-   This option alows you to provide words that users are not supposed to submit. For eg ["null", "error", "false", "fake", "admin"]. In order to use this option, you must set `strictMode` to `true`.
 
-To use any of these options, provide it as an object and pass it as the second argument when creating an instance of octaValidate.
+  This option is used in conjuction with some validation rule types to effect a strict validation test on the payload. For example, when this option is set to `true`, the rule type `matches` will become case-sensitive and the `prohibitedWords` flag will prevent some phrases from being submitted.
+This means that if any phrase is found in your payload, be it `username`, `password`, etc, validation will fail and the user is instructed to remove or replace the phrase.
+
+- strictWords: <code>Array</code>
+
+  This option alows you to provide words that users are not supposed to submit. For eg ["null", "error", "false", "fake", "admin"]. In order to use this option, you must set `strictMode` to `true`.
+
+To use any of these options, provide it as an object and pass it as the second argument when creating an instance of Octavalidate.
 
 ```javascript
-//config options
-const options = {
-  strictMode : true, 
-  strictWords : ["error", "false", "invalid", "fake", "admin"]
-}
-//my function instance
-const myForm = new octaValidate('FORM_ID', options);
+//create new validation instance
+const octavalidate = new Octavalidate("ROUTE_IDENTIFIER", {
+  strictMode: true, //false by default
+  prohibitedWords: ["fake", "admin", "user", "super"], //any traces of these phrases will not be allowed in the payload
+});
+```
+
+### Define and Assign Validation Rules
+
+Before instructing the library to validate your form, you must define a validation rule for each field. Creating validation rules is very simple and straightforward. Consider the following example;
+
+```javascript
+const octavalidate = new Octavalidate("ROUTE_IDENTIFIER");
+
+//get validation methods
+const { createValidator } = octavalidate;
+
+//define validation rules
+const validationRules = {
+  username: {
+    required: true,
+    type: "string",
+  },
+  age: {
+    required: true,
+    type: "number",
+    length: 2,
+  },
+  maritalStatus: {
+    required: true,
+    type: "string",
+    matches: ["single", "married", "divorced"], //this will become case-sensitive if strictMode is set to true
+  },
+};
+
+//assign validation rules
+createValidator(validationRules);
+```
+
+In the example above, the validation rules for the `username` & `age` fields reads;
+
+- Your username is required and must be a string
+- Your age is required and must be a number
+- Your maritalStatus is required and must match single, married or divorced
+
+> So you can try to provide a username and age that fails the validation rule and watch the results.
+
+Below you can find all a list of supported validation rule types and their use cases.
+
+| Rule Type    | Usage                                                                                                         | Data Type       |
+| ------------ | ------------------------------------------------------------------------------------------------------------- | --------------- |
+| type         | Specifies the data type of the input (e.g., string, number, boolean, file).                                   | string          |
+| required     | Indicates that the field is mandatory and cannot be left blank.                                               | boolean         |
+| length       | Specifies the exact number of characters allowed in the field.                                                | number          |
+| minLength    | Specifies the minimum number of characters allowed in the field.                                              | number          |
+| maxLength    | Specifies the maximum number of characters allowed in the field.                                              | number          |
+| ruleTitle    | Specifies an inbuilt regular expression that can be used to validate a field. [Read more](#using-rule-titles) | string          |
+| pattern      | A regular expression that the field must match to be considered valid.                                        | string (RegExp) |
+| matches      | Ensures the value of a field matches a set of words or phrases. It becomes case-sensitive if `strictMode` is enabled.                                         | array []        |
+| errorMessage | A custom message displayed when the validation rule is not met. [Read more](#adding-error-messages)           | object {}       |
+
+### Use Rule Titles
+
+Rule titles are inbuilt regular expressions that can be used to validate a field. For example, you can use this to validate email addresses, URLs, uppercase letters, lowercase letters, etc
+
+```javascript
+const validationRules = {
+  gender: {
+    required: true,
+    type: "string",
+    ruleTitle: "lowerAlpha", //this will check against lowercase letters
+  },
+  orderId: {
+    required: true,
+    type: "string",
+    ruleTitle: "alphaNumeric", //this will check against letters and numbers
+  },
+};
+```
+
+Below you can find a list of inbuilt regular expressions and their use cases.
+
+| Rule Title     | Usage                                                                                                                                                |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| alphaOnly      | Validates that the input contains only alphabetic characters (A-Z, a-z).                                                                             |
+| alphaNumeric   | Validates that the input contains only alphabetic and numeric characters (A-Z, a-z, 0-9).                                                            |
+| lowerAlpha     | Validates that the input contains only lowercase alphabetic characters (a-z).                                                                        |
+| upperAlpha     | Validates that the input contains only uppercase alphabetic characters (A-Z).                                                                        |
+| url            | Validates that the input is a properly formatted URL.                                                                                                |
+| strongPassword | Validates that the input meets the criteria for a strong password (e.g., includes uppercase and lowercase letters, numbers, and special characters). |
+| generalText    | Validates that the input is a general text, allowing a wide range of characters including punctuation.                                               |
+| alphaSpaces    | Validates that the input contains only alphabetic characters and spaces.                                                                             |
+| email          | Validates that the input is a properly formatted email address.                                                                                      |
+| userName       | Validates that the input is a properly formatted username (typically alphanumeric and may include underscores or hyphens).                           |
+
+### Use Regular Expressions
+
+Now, if you have a custom regular expression you would like to use for a field, you can provide it as `pattern` to the validation rule. Here's an example of a regular expression that I could use to validate a Nigerian phone number.
+
+```javascript
+const validationRules = {
+  phone: {
+    required: true,
+    type: "string",
+    pattern: /^\+234[789]\d{9}$/,
+  },
+};
+```
+
+With the validation rule above, if the value of your payload does not match the pattern, the validation will fail and an error will be returned.
+
+> ⚠️ You do not need to pass in your **regular expression** as a string. This is because the **JavaScript engine** natively recognizes **regular expressions**.
+
+### Add Error Messages
+
+How boring would a validation error be withour a user friendly error message? With this package, you can add a custom error message to every validation rule. Here's an example of how you can add a custom error message to your validation rules.
+
+```javascript
+const validationRules = {
+  phone: {
+    required: true,
+    type: "string",
+    pattern: /^\+234[789]\d{9}$/,
+    errorMessage: {
+      required: "Your phone number is required",
+      type: "Your phone number must be valid digits",
+      pattern: "The phone number you provided is not a valid Nigerian number",
+    },
+  },
+};
+```
+
+### Validate a payload
+
+To successfully validate a payload, please make sure you have defined and assigned validation rules to the `createValidator` method. Then you have to assign the payload to validate to the `validate` method.
+
+> ⚠️ If you do not provide any validation rule, the response of the `validate` method would be `true` which means that the payload passed the validation.
+
+Consider the example below;
+
+```javascript
+const octavalidate = new Octavalidate("ROUTE_IDENTIFIER");
+
+//get validation methods
+const { createValidator, validate } = octavalidate;
+
+//define validation rules
+const validationRules = {
+  username: {
+    required: true,
+    type: "string",
+  },
+  age: {
+    required: true,
+    type: "number",
+    length: 2,
+  },
+  maritalStatus: {
+    required: true,
+    type: "string",
+    matches: ["single", "married", "divorced"],
+  },
+};
+
+//assign validation rules
+createValidator(validationRules);
+
+//validate the payload
+const validationResult = validate(req.body); //perform validation on request body
+//true means validation passed successfully
+//false means validation failed, in such case, please call the `getError` or `getErrors` method
+```
+
+> You can also try to validate `req.query`, `req.file` and `req.files` so long as the format is in JSON.
+
+### Validate Uploaded Files
+
+You can also use Octavalidate to validate uploaded files and check if the user uploaded;
+
+- An actual file
+- A valid file
+- A minimum upload size
+- A maximum upload size
+- A specific upload size
+
+Before you can validate a file, you need to make sure that the validation rule specified for the form field has the type `file` only this can the script recognize that you are trying to validate an uploaded file.
+
+```javascript
+const validationRules = {
+  profile: {
+    type: "file", //use this to inform octavalidate that this field (profile) is a file
+    required: true,
+    errorMessage: {
+      required: "Your profile picture is required",
+    },
+  },
+};
+```
+
+Now depending on the package being used to handle file uploads, please make sure to pass in the appropriate payload to the validation function for the script to validate the file upload properly.
+
+> The example below was tested to work well with `multer`. If you use a different package, you can try it out or open a PR so we try to support it as well 🙂
+
+```javascript
+const octavalidate = new Octavalidate("ROUTE_IDENTIFIER");
+const { createValidator, validate } = octavalidate;
+
+const validationRules = {
+  username: {
+    type: "string",
+    required: true,
+    errorMessage: {
+      required: "Your username is required",
+    },
+  },
+  profile: {
+    type: "file",
+    required: true,
+    errorMessage: {
+      required: "Your profile picture is required",
+    },
+  },
+  certificates: {
+    type: "file",
+    required: true,
+    errorMessage: {
+      required: "Your certificates are required",
+    },
+  },
+};
+
+createValidator(validationRules); //create validation rules
+
+validate({
+  ...req.body, //destructure request body
+  profile: req.file, //assign the file property from multer to `profile` so it matches your validation rule
+});
+
+//In the case where you have multiple files assigned to a single input, you can do this
+validate({
+  ...req.body, //destructure request body
+  certificates: req.files, //assign the files property from multer to `certificates` so it matches your validation rule
+});
+```
+
+Easy right? Below you will find some of the validation rule types that can be used to validate a file and their use cases.
+
+| Rule Type     | Usage                                                                                                        | Data Type |
+| ------------- | ------------------------------------------------------------------------------------------------------------ | --------- |
+| type          | Specifies the data type of the input (e.g., string, number, boolean). The value itself **must** be a string. | string    |
+| required      | Indicates that the field is mandatory and cannot be left blank.                                              | boolean   |
+| mimeType      | Specifies the allowed MIME types for the file (e.g., image/jpeg, application/pdf).                           | string    |
+| fileSize      | Specifies the exact file size allowed. Eg; 1KB, 10MB, 20GB, 30TB, 40PB.                                      | string    |
+| minFileSize   | Specifies the minimum file size allowed. Eg; 1KB, 10MB, 20GB, 30TB, 40PB.                                    | string    |
+| maxFileSize   | Specifies the maximum file size allowed. Eg; 1KB, 10MB, 20GB, 30TB, 40PB.                                    | string    |
+| numOfFiles    | Specifies the exact number of files allowed.                                                                 | number    |
+| minNumOfFiles | Specifies the minimum number of files allowed.                                                               | number    |
+| maxNumOfFiles | Specifies the maximum number of files allowed.                                                               | number    |
+
+### Return Errors
+
+There are 2 methods that can be used to return validation errors. You can call the `getError` method to return a single error or you can call `getErrors` to return a list of errors.
+
+```javascript
+const octavalidate = new Octavalidate("ROUTE_IDENTIFIER");
+const { createValidator, validate, getError, getErrors } = octavalidate;
+
+const validationRules = {
+  username: {
+    type: "string",
+    required: true,
+    errorMessage: {
+      required: "Your username is required"
+    }
+  }
+};
+
+createValidator(validationRules); //create validation rules
+
+validate(req.body); //validate the request body
+
+console.log(getError()) //return a single error
+
+console.log(getErrors()) //return a list of errors
 ```
 
 ## REFERENCE METHODS
+
 After creating a new instance of the function, the methods below becomes available for use.
 
 ```javascript
-//create instance of the function
-const myForm = new octaValidate('FORM_ID');
+//create instance 
+const octavalidate = new Octavalidate("ROUTE_IDENTIFIER");
 ```
 
-- `validateFields()`
-  
-  Invoke this method to begin validation on form fields
+- `createValidator()`
 
-- `validateFiles()`
-  
-  Invoke this method to begin validation on uploaded files
+  Invoke this method to assign validation rules to the script
 
-- `getErrors()` 
-  
-  Invoke this method to return the validation errors on a form
-- `form()` 
-  
-  This method returns the form ID.
-- `customRule(RULE_TITLE, REG_EXP, ERROR_TEXT)`
-  
-   Invoke this method to define your custom validation rule.
-- `moreCustomRules(RULES)`
-  
-    Invoke this method to define more custom validation rules.
-- `version()`
-  
-  Invoke this method to retrieve the library's version number.
-  
-> There are more methods than the ones listed above, Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/api.html) to learn more.
+- `validate()`
 
-## DEMO
-> We are not limiting this library for API use only! You can also use this library to validate your form data, both form inputs and file uploads.
+  Invoke this method to begin validation on the payload
 
+- `getErrors()`
 
-Navigate to the `/demo` folder and CD into it
+  Invoke this method to return a list of validation errors
 
-```
-$ cd demo
-``` 
-Then run the command below to install express
+- `getError()`
 
-```
-$ npm i express
-```
-Once express has been installed, fire up the server by running the command below on your terminal.
+  Invoke this method to return a single validation error
 
-```
-$ node demo.js
+## TESTING 
+
+To ensure that the library is working correctly and all functionalities are properly implemented, you should run the test suite.
+
+### Prerequisites
+
+Before running the tests, make sure you have installed all the necessary dependencies. If you haven't done so yet, install the development dependencies by running:
+
+```sh
+$ npm install
 ```
 
-Now, call the APIs below with any API client of your choice using a POST method and pass in the data associated to it
+Once the dependencies have been installed, run the following command and it will execute the test cases in `test/` directory
 
-The goal of this demo APIs is for you to run validation tests on the data. You can provide an invalid email address, invalid username etc just to break through.
-
-Registration API `http://localhost:5000/register`
-
-Sample Data
-```json
-{
-    "email" : "test@gmail.com",
-    "uname" : "simon",
-    "pass" : "12345678",
-    "conpass" : "12345678"
-}
-```
-
-Login API `http://localhost:5000/register`
-
-Sample Data
-
-```json
-{
-    "email" : "test@gmail.com",
-    "pass" : "12345678"
-}
+```sh
+$ npm test
 ```
 
 ## Author
 
-[Simon Ugorji](https://twitter.com/ugorji_simon)
+[Follow me on LinkedIn </> @Simon Ugorji](https://www.linkedin.com/in/simon-ugorji-57a6a41a3/)
 
 ## Support Me
 
-[Donate with PayPal](https://www.paypal.com/donate/?hosted_button_id=ZYK9PQ8UFRTA4)
-
-[Buy me a coffee](https://buymeacoffee.com/simon.ugorji)
-
-## Contributors
-
-These are the amazing developers that contributed to the development of this **GREAT** project
-
-- [Kiisi Felix](https://github.com/kiisi)
-- [Melody Oluoma](https://github.com/oma189)
+Just star the repository 🙂
