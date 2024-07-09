@@ -72,7 +72,7 @@ We have 2 configuration options:
   This option is used in conjuction with some validation rule types to effect a strict validation test on the payload. For example, when this option is set to `true`, the rule type `matches` will become case-sensitive and the `prohibitedWords` flag will prevent some phrases from being submitted.
 This means that if any phrase is found in your payload, be it `username`, `password`, etc, validation will fail and the user is instructed to remove or replace the phrase.
 
-- strictWords: <code>Array</code>
+- prohibitedWords: <code>Array</code>
 
   This option alows you to provide words that users are not supposed to submit. For eg ["null", "error", "false", "fake", "admin"]. In order to use this option, you must set `strictMode` to `true`.
 
@@ -340,7 +340,7 @@ Easy right? Below you will find some of the validation rule types that can be us
 
 ### Return Errors
 
-There are 2 methods that can be used to return validation errors. You can call the `getError` method to return a single error or you can call `getErrors` to return a list of errors.
+There are 2 methods that can be used to return validation errors. You can call the `getError()` method to return a single error or you can call `getErrors()` to return a list of errors.
 
 ```javascript
 const octavalidate = new Octavalidate("ROUTE_IDENTIFIER");
