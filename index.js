@@ -1177,7 +1177,7 @@ class Octavalidate {
      *
      * ```
      * @param {}
-     * @returns string || null
+     * @returns string | null
      */
     getError = () => {
         const errors = this.#errors;
