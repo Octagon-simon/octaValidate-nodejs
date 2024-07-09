@@ -3,7 +3,7 @@ declare module "octavalidate-nodejs" {
         constructor();
         createValidator(input: Object): boolean;
         validate(input: Object): boolean;
-        getError(): Object;
+        getError(): string | null;
         getErrors(): Object;
     }
 
