@@ -28,6 +28,7 @@ class Octavalidate {
     #defaultNonFileRuleTypes = [
         "type",
         "required",
+        "length",
         "minLength",
         "maxLength",
         "ruleTitle",
@@ -323,7 +324,7 @@ class Octavalidate {
             ruleType,
             ruleTypeValue,
         }) => {
-            //check if lengthType is valid
+            //check if lengthType: ruleType is valid
             if (!["length", "minLength", "maxLength"].includes(ruleType)) return;
 
             //value must be a number
@@ -347,7 +348,7 @@ class Octavalidate {
                 }
             };
 
-            switch (lengthType) {
+            switch (ruleType) {
                 case "length":
                     validateField(
                         fieldValue?.length !== ruleTypeValue,
@@ -802,6 +803,8 @@ class Octavalidate {
                 };
             }
         }
+
+        return true;
     };
 
     /**

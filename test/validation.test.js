@@ -1,5 +1,5 @@
 // Import the functions to test
-const Octavalidate  = require('../index.js');
+const Octavalidate = require('../index.js');
 
 //create new instance of Octavalidate
 const octavalidate = new Octavalidate('test')
@@ -92,7 +92,7 @@ test('Edge case payload with invalid username characters should return false and
         username: "user_!@#",
         password: "",
         email: "",
-        phone : ""
+        phone: ""
     };
 
     const validationResult = validate(payload);
@@ -104,3 +104,99 @@ test('Edge case payload with invalid username characters should return false and
     expect(validationErrors['test']['email']['required']).toBe("Your email is required");
     expect(validationErrors['test']['phone']['required']).toBe("Your phone number is required");
 });
+
+describe("Length Validation: This test helps to check if the maximum, minimum and exact length of a field is correct", () => {
+
+    it("Should return the correct error message if number of characters is more than the maxLength", () => {
+        //create new instance of Octavalidate
+        const octavalidate = new Octavalidate('test-maxLength')
+
+        //destructure methods
+        const { createValidator, validate, getErrors } = octavalidate
+
+        const rules = {
+            age: {
+                maxLength: 2,
+                required: true,
+                errorMessage: {
+                    maxLength: "Your age should not exceed 2 characters"
+                }
+            }
+        };
+
+        createValidator(rules);
+
+        const payload = {
+            age: "300"
+        };
+
+        const validationResult = validate(payload);
+        const validationErrors = getErrors();
+
+        expect(validationResult).toBe(false);
+
+        expect(validationErrors['test-maxLength']['age']['maxLength']).toBe("Your age should not exceed 2 characters");
+    })
+
+    it("Should return the correct error message if number of characters is less than the minLength", () => {
+
+        //create new instance of Octavalidate
+        const octavalidate = new Octavalidate('test-minLength')
+
+        //destructure methods
+        const { createValidator, validate, getErrors } = octavalidate
+        const rules = {
+            password: {
+                minLength: 8,
+                required: true,
+                errorMessage: {
+                    minLength: "Your password should contain at least 8 characters"
+                }
+            }
+        };
+
+        createValidator(rules);
+
+        const payload = {
+            password: "12345"
+        };
+
+        const validationResult = validate(payload);
+        const validationErrors = getErrors();
+
+        expect(validationResult).toBe(false);
+        expect(validationErrors['test-minLength']['password']['minLength']).toBe("Your password should contain at least 8 characters");
+    })
+
+    it("Should return the correct error message if number of characters is not equal to the length", () => {
+
+        //create new instance of Octavalidate
+        const octavalidate = new Octavalidate('test-length')
+
+        //destructure methods
+        const { createValidator, validate, getErrors } = octavalidate
+
+        const rules = {
+            pin: {
+                length: 4,
+                required: true,
+                errorMessage: {
+                    length: "Your PIN should be at least 4 characters"
+                }
+            }
+        };
+
+        createValidator(rules);
+
+        const payload = {
+            pin: "123"
+        };
+
+        const validationResult = validate(payload);
+        const validationErrors = getErrors();
+
+        expect(validationResult).toBe(false);
+        expect(validationErrors['test-length']['pin']['length']).toBe("Your PIN should be at least 4 characters");
+    })
+})
+
