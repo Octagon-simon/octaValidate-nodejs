@@ -1,6 +1,6 @@
 {
   "name": "octavalidate-nodejs",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "This is a developer-friendly package that helps to validate a JSON payload using validation rules and sophisticated regular expressions. You can use this package to validate a form submission via any HTTP method.",
   "main": "index.js",
   "types": "index.d.ts",

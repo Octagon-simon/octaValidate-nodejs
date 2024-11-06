@@ -22,6 +22,9 @@ You can validate both files and non-file objects
 //import library
 const Octavalidate = require("octavalidate-nodejs");
 
+//or
+import Octavalidate from 'octavalidate-nodejs';
+
 //create new validation instance
 const octavalidate = new Octavalidate("ROUTE_IDENTIFIER");
 
@@ -58,6 +61,12 @@ Here's a step-by-step process on how you can validate your form with Octavalidat
 ```javascript
 //import library
 const Octavalidate = require("octavalidate-nodejs");
+
+//or
+import Octavalidate from 'octavalidate-nodejs';
+
+//If you are using TypeScript, do well to include the types
+import Octavalidate, { ValidationRules } from 'octavalidate-nodejs';
 
 //create new validation instance
 const octavalidate = new Octavalidate("ROUTE_IDENTIFIER");
@@ -114,6 +123,25 @@ const validationRules = {
   },
 };
 
+//if you are using TypeScript, you can rewrite the rules by including the type declaration you imported earlier
+
+const validationRules: ValidationRules = {
+  username: {
+    required: true,
+    type: "string",
+  },
+  age: {
+    required: true,
+    type: "number",
+    length: 2,
+  },
+  maritalStatus: {
+    required: true,
+    type: "string",
+    matches: ["single", "married", "divorced"], //this will become case-sensitive if strictMode is set to true
+  },
+};
+
 //assign validation rules
 createValidator(validationRules);
 ```
@@ -136,7 +164,7 @@ Below you can find all a list of supported validation rule types and their use c
 | minLength    | Specifies the minimum number of characters allowed in the field.                                              | number          |
 | maxLength    | Specifies the maximum number of characters allowed in the field.                                              | number          |
 | ruleTitle    | Specifies an inbuilt regular expression that can be used to validate a field. [Read more](#using-rule-titles) | string          |
-| pattern      | A regular expression that the field must match to be considered valid.                                        | string (RegExp) |
+| pattern      | A regular expression that the field must match to be considered valid.                                        | RegExp |
 | matches      | Ensures the value of a field matches a set of words or phrases. It becomes case-sensitive if `strictMode` is enabled.                                         | array []        |
 | errorMessage | A custom message displayed when the validation rule is not met. [Read more](#adding-error-messages)           | object {}       |
 
@@ -145,7 +173,26 @@ Below you can find all a list of supported validation rule types and their use c
 Rule titles are inbuilt regular expressions that can be used to validate a field. For example, you can use this to validate email addresses, URLs, uppercase letters, lowercase letters, etc
 
 ```javascript
+//JavaScript
+
 const validationRules = {
+  gender: {
+    required: true,
+    type: "string",
+    ruleTitle: "lowerAlpha", //this will check against lowercase letters
+  },
+  orderId: {
+    required: true,
+    type: "string",
+    ruleTitle: "alphaNumeric", //this will check against letters and numbers
+  },
+};
+```
+
+```typescript
+//Typescript
+
+const validationRules: ValidationRules = {
   gender: {
     required: true,
     type: "string",
